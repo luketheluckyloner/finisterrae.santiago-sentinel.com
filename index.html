@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egresados UFT</title>
+    <link rel="stylesheet" href="stylesx.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+    <div id="header">
+        <img id="logo" src="logo.png" alt="Logo"> <!-- Your existing logo -->
+    </div>
+
+    <div class="container">
+        <h1>VERIFICACION CERTIFICADOS UFT</h1>    
+        <form id="guessForm">
+            <p>Codigo de validacion.*</p>
+            <input type="number" id="guessNumber" required>
+            <p>RUT.*</p>
+            <input type="text" id="rutNumber" required placeholder="12.345.678-9">
+            <button type="submit">Validar</button>
+        </form>
+
+        <div id="successNotification" class="notification-success"></div>
+        <div id="errorNotification" class="notification-error"></div>
+    </div>
+
+    <div id="footer">
+        <a href="#">Contact Us</a>
+    </div>
+
+    <script src="scriptx.js"></script>
+</body>
+</html>
