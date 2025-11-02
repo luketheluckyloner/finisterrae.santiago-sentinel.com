@@ -6,7 +6,7 @@ document.getElementById('guessForm').addEventListener('submit', function(event) 
     let rutNumber = document.getElementById('rutNumber').value.trim();
     
     // Define the correct number (you can change this number to any other)
-    let correctNumber = 4815162342;
+    let correctNumber = 337548;
     
     // Check if the RUT number is valid
     if (!validateRUT(rutNumber)) {
