@@ -5,12 +5,12 @@ document.getElementById('guessForm').addEventListener('submit', function(event) 
     let guessedNumber = parseInt(document.getElementById('guessNumber').value);
     
     // Define the correct number (you can change this number to any other)
-    let correctNumber = 4815162342;
+    let correctNumber = 337548;
     
     // Check if the guessed number is correct
     if (guessedNumber === correctNumber) {
         showNotification('Certificado de ALUMNO EGRESADO emitido con validez.', 'success');
-        downloadFile('cert.pdf');
+        downloadFile('Certificado_Titulo_16092025.pdf')
     } else {
         showNotification('Certificado no válido. Por favor intentar nuevamente.', 'error');
     }
