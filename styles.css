@@ -1,106 +1,134 @@
-document.getElementById('guessForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    // Get the guessed number and RUT number
-    let guessedNumber = parseInt(document.getElementById('guessNumber').value);
-    let rutNumber = document.getElementById('rutNumber').value.trim();
-    
-    // Define the correct number (you can change this number to any other)
-    let correctNumber = 4815162342;
-    
-    // Check if the RUT number is valid
-    if (!validateRUT(rutNumber)) {
-        showNotification('RUT no válido. Por favor intentar nuevamente.', 'error');
-        return;
-    }
-    
-    // Check if the guessed number is correct
-    if (guessedNumber === correctNumber) {
-        showNotification('Certificado de ALUMNO EGRESADO emitido con validez.', 'success');
-        downloadFile('cert.pdf');
-    } else {
-        showNotification('Certificado no válido. Por favor intentar nuevamente.', 'error');
-    }
-    
-    // Clear the input fields
-    document.getElementById('guessNumber').value = '';
-    document.getElementById('rutNumber').value = '';
-});
-
-function validateRUT(rut) {
-    // Remove dots and dashes
-    rut = rut.replace(/\./g, '').replace(/-/g, '');
-
-    // Split the number and the verification digit
-    let rutBody = rut.slice(0, -1);
-    let dv = rut.slice(-1).toUpperCase();
-
-    // Calculate the verification digit
-    let sum = 0;
-    let multiplier = 2;
-
-    for (let i = rutBody.length - 1; i >= 0; i--) {
-        sum += parseInt(rutBody[i]) * multiplier;
-        multiplier = (multiplier == 7) ? 2 : multiplier + 1;
-    }
-
-    let expectedDV = 11 - (sum % 11);
-    if (expectedDV == 11) expectedDV = '0';
-    if (expectedDV == 10) expectedDV = 'K';
-
-    // Return true if the calculated DV matches the provided DV
-    return expectedDV == dv;
+/* Common styles for both desktop and mobile */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-image: url('wallpaper.jpg'); /* Replace 'wallpaper.jpg' with your image path */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
-function showNotification(message, type) {
-    let successNotification = document.getElementById('successNotification');
-    let errorNotification = document.getElementById('errorNotification');
-
-    if (type === 'success') {
-        successNotification.textContent = message;
-        successNotification.style.display = 'block'; // Show success notification
-        errorNotification.style.display = 'none'; // Hide error notification
-    } else if (type === 'error') {
-        errorNotification.textContent = message;
-        errorNotification.style.display = 'block'; // Show error notification
-        successNotification.style.display = 'none'; // Hide success notification
-    }
-
-    // Hide the notification after 3 seconds
-    setTimeout(function() {
-        successNotification.style.display = 'none';
-        errorNotification.style.display = 'none';
-    }, 3000); // 3000 milliseconds = 3 seconds
+#header {
+    background-color: #333333; /* Custom color for header */
+    color: #ffffff; /* White text */
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensures the header is above other content */
 }
 
-function downloadFile(fileName) {
-    // Create a new anchor element
-    const link = document.createElement('a');
-    link.href = fileName; // Set the href to the file name
-    link.download = fileName; // Set the download attribute to the file name
-    document.body.appendChild(link); // Append the link to the body
-    link.click(); // Programmatically click the link to trigger the download
-    document.body.removeChild(link); // Remove the link from the body
+#logo {
+    width: 150px; /* Adjust logo size as needed */
+    margin-top: 10px;
 }
 
-document.getElementById('rutNumber').addEventListener('input', function(event) {
-    this.value = formatRUT(this.value);
-});
+.container {
+    margin-top: 100px; /* Space for the header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
 
-function formatRUT(rut) {
-    // Remove all non-numeric characters except for 'k' or 'K'
-    rut = rut.replace(/[^\dkK]/g, '');
+h1 {
+    background-color: #177ed37a; /* Background color for h1 */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding inside h1 */
+    border-radius: 20px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below h1 */
+    font-family: "Raleway", sans-serif; /* Apply Raleway font */
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
 
-    // Add dots and dash for formatting
-    let formattedRUT = '';
-    let body = rut.slice(0, -1);
-    let dv = rut.slice(-1);
+form {
+    background-color: #ffffff; /* Custom color for form container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for a more sophisticated look */
+    max-width: 400px; /* Limit form width */
+    width: 100%;
+    margin-top: 20px;
+}
 
-    while (body.length > 3) {
-        formattedRUT = '.' + body.slice(-3) + formattedRUT;
-        body = body.slice(0, -3);
+input[type="number"], input[type="text"], button {
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding and border do not increase width */
+}
+
+button {
+    margin-top: 10px;
+    background-color: #177ed3;
+    color: white; 
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #5ca4df;
+}
+
+.notification-success {
+    background-color: #4CAF50; /* Green background for success notification */
+    color: white; /* White text */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: none; /* Initially hidden */
+}
+
+.notification-error {
+    background-color: #f44336; /* Red background for error notification */
+    color: white; /* White text */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: none; /* Initially hidden */
+}
+
+#footer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    color: #ffffff; /* White text */
+}
+
+#footer a {
+    color: #ffffff; /* White text */
+    text-decoration: none;
+}
+
+#logo-bottom {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: 100px; /* Adjust as needed */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 600px) {
+    #logo {
+        width: 100px; /* Adjust logo size for smaller screens */
     }
-    formattedRUT = body + formattedRUT + '-' + dv;
 
-    return formattedRUT.toUpperCase();
+    h1 {
+        font-size: 24px; /* Decrease font size for smaller screens */
+    }
+
+    form {
+        max-width: 300px; /* Adjust form width for smaller screens */
+    }
+
+    input[type="number"], input[type="text"], button {
+        font-size: 16px; /* Decrease input and button font size for smaller screens */
+    }
 }
